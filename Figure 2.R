@@ -8,15 +8,13 @@ library(patchwork)
 tree <- read.beast("MCC")
 data <- read_csv("452Data.csv")
 
-# 提取后验概率信息并创建颜色映射
-# 假设后验概率存储在树的节点数据中，字段名为"posterior"或"prob"
-# 根据实际情况调整字段名
+
 if("posterior" %in% names(tree@data)) {
   tree@data$color_group <- ifelse(as.numeric(tree@data$posterior) >= 0.8, "High", "Low")
 } else if("prob" %in% names(tree@data)) {
   tree@data$color_group <- ifelse(as.numeric(tree@data$prob) >= 0.8, "High", "Low")
 } else {
-  # 如果找不到后验概率字段，设置默认值
+
   warning("未找到后验概率字段，请检查树文件中的字段名")
   tree@data$color_group <- "Low"
 }
@@ -193,9 +191,10 @@ p3 <- ggtree(tree809, mrsd = "2024-01-01", aes(color = color_group)) +
 print(p3)
 ggsave("tree809_with_support_colored.pdf", plot = p3, width = 8, height = 6)
 
-# 可选：将三幅图合并成一幅图（P1在左侧，P2、P3在右侧）
+
 combined_plot <- p1 | (p2 / p3) + 
   plot_layout(widths = c(2, 1))
 
 print(combined_plot)
 ggsave("combined_trees_with_support_colored.pdf", plot = combined_plot, width = 25, height = 10)
+
