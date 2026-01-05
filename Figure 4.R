@@ -81,7 +81,7 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
     mean(xlim), ylim[2] + 0.2,
     sector.name,
     sector.index = sector.name,
-    facing = "downward",   # 竖直显示
+    facing = "downward",  
     niceFacing = TRUE,
     adj = c(0.5, 0.5),
     cex = 1.1,
@@ -90,4 +90,5 @@ circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
 }, bg.border = NA)
 
 circos.clear()
+
 dev.off()
