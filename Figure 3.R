@@ -17,7 +17,7 @@ location <- location %>%
 chain <- chain %>%
   mutate(from = trimws(from), to = trimws(to))
 
-# 合并经纬度（注意这里的列名！）
+# 合并经纬度
 chain <- chain %>%
   left_join(location %>% rename(from_lat = latitude, from_long = longitude), by = c("from" = "Location")) %>%
   left_join(location %>% rename(to_lat = latitude, to_long = longitude), by = c("to" = "Location"))
@@ -100,7 +100,6 @@ p2 <- ggplot() +
     segment.size = 0.5,
     min.segment.length = 0
   ) +
-  # 其他链路（黑色，右弯）
   geom_curve(
     data = chain %>% filter(!is_sea2nx),
     aes(x = from_long, y = from_lat, xend = to_long, yend = to_lat),
@@ -120,7 +119,6 @@ p2 <- ggplot() +
     straight = TRUE,
     remove_long = TRUE
   ) +
-  # 紫色线段（左弯）
   geom_curve(
     data = chain %>% filter(is_sea2nx),
     aes(x = from_long, y = from_lat, xend = to_long, yend = to_lat),
@@ -153,3 +151,4 @@ p2 <- ggplot() +
 
 print(p2)
 ggsave("Ningxia_Transmission_Chain2.pdf", plot = p2, width = 10, height = 8, units = "in")
+
