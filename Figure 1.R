@@ -5,7 +5,7 @@ if (!require("ape")) install.packages("ape")
 library(ape)
 
 # 读取NEXUS树文件
-tree <- read.tree("Tempest5426iqtreefigtree.newick")  # 替换为你的文件名
+tree <- read.tree("Tempest5426iqtreefigtree.newick")  
 
 # 获取所有节点数
 Ntip <- length(tree$tip.label)
@@ -58,12 +58,12 @@ library(patchwork)
 tree2 <- read.tree("Tempest5426iqtreefigtree.newick")
 data <- read_excel("5426-genotype.xlsx")#读取宏文件
 
-# 计算每个clade的样本数量（仅用于排序，不用于颜色分配）
+# 计算每个clade的样本数量
 clade_counts <- data %>%
   count(clade) %>%
   arrange(desc(n))
 
-# 创建自定义颜色映射 - 不再基于样本数量
+# 创建自定义颜色映射
 color_palette <- c()
 
 # 为每个主要clade系列定义固定颜色范围
@@ -75,7 +75,7 @@ clade_colors <- list(
   VII = colorRampPalette(c("#D2B48C", "#8B4513"))(3)       # 棕色系列
 )
 
-# 为每个clade分配固定颜色（不再基于样本数量）
+# 为每个clade分配固定颜色
 assign_colors <- function(clade_list, color_gradient) {
   colors <- setNames(color_gradient[1:length(clade_list)], clade_list)
   return(colors)
@@ -175,7 +175,7 @@ region_totals <- region_clade_counts %>%
 # 确保堆积条形图中的clade使用相同的因子水平
 region_clade_counts$clade <- factor(region_clade_counts$clade, levels = legend_order)
 
-# 第一部分：创建堆积条形图（隐藏图例）
+# 第一部分：创建堆积条形图
 p1 <- ggplot(region_clade_counts, aes(x = percentage, y = Study.Region, fill = clade)) +
   geom_col(position = "stack", width = 0.7) +
   geom_text(data = region_totals, 
@@ -192,9 +192,9 @@ p1 <- ggplot(region_clade_counts, aes(x = percentage, y = Study.Region, fill = c
     panel.grid.major.y = element_blank()
   )
 
-# 第二部分：创建系统发育树（先计算最大y值）
+# 第二部分：创建系统发育树
 temp_tree <- ggtree(tree2, layout = "rectangular", ladderize = TRUE, size = 0.5) %<+% data
-max_y_value <- max(temp_tree$data$y) * 1.1  # 增加10%的顶部空间
+max_y_value <- max(temp_tree$data$y) * 1.1 
 
 
 # 1. 画树并加点
@@ -221,10 +221,10 @@ p2 <- ggtree(tree2, layout = "rectangular", ladderize = TRUE, size = 0.5) %<+% d
 # 2. 获取y轴范围并留白
 ymin <- min(p2$data$y, na.rm = TRUE)
 ymax <- max(p2$data$y, na.rm = TRUE)
-y_pad <- (ymax - ymin) * 0.01  # 上下各留10%空白
+y_pad <- (ymax - ymin) * 0.01  
 
 p2 <- p2 + coord_cartesian(ylim = c(ymin - y_pad, ymax + y_pad)) +
-  guides(color = guide_legend(override.aes = list(size = 6)))  # 调大图例圆圈
+  guides(color = guide_legend(override.aes = list(size = 6)))  
 
 print(p2)
 
@@ -235,3 +235,4 @@ combined_plot <- (p2 | p1) +
 # 显示和保存图形
 print(combined_plot)
 ggsave("combined_plot2.pdf", combined_plot, width = 12, height = 9, dpi = 300)
+
